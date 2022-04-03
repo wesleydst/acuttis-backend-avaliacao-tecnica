@@ -13,6 +13,18 @@ function getDiffInMinutes(startDateTime, endDateTime) {
   return diffInMinutes;
 }
 
+/**
+ * Recebe um período de trabalho (hora inicial e hora final) e identifica a
+ * quantidade de horas que foram trabalhadas em horário diurno e também as que
+ * foram trabalhadas em horário noturno. Considera-se horário noturno todo o
+ * período trabalhado entre as 22:00 e as 05:00. Por consequência, considera-se
+ * horário diurno todo o período trabalhado entre as 05:00 e as 22:00.
+ *
+ * @param {string} startTimeString - hora inicial do período de trabalho.
+ * @param {string} endTimeString - hora final do período de trabalho.
+ * @returns Retorna um objeto JSON com as propriedades daytimeInMinutes
+ * (Number) e nocturnalInMinutes (Number).
+ */
 function calculate(startTimeString, endTimeString) {
   if (startTimeString === endTimeString) {
     throw new Error("Tempos iguais não é válido.")
