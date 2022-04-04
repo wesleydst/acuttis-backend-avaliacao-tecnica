@@ -39,7 +39,7 @@ function calculate(startTimeString, endTimeString) {
   let periodDivider5h = new Date("2022-01-01 05:00");
   let periodDivider22h = new Date("2022-01-01 22:00");
 
-  // Para facilitar o cálculo os perídos são transformados
+  // Para facilitar o cálculo, os períodos são transformados
   // em uma data completa no mesmo dia
   const defaultDateInMillis = new Date("2022-01-01 00:00").getTime();
 
@@ -49,8 +49,8 @@ function calculate(startTimeString, endTimeString) {
   let startDateTime = new Date(defaultDateInMillis + startInMillis);
   let endDateTime = new Date(defaultDateInMillis + endInMillis);
 
-  // Se o início for maior que o fim, significa que o perído termina no dia
-  // seguinte, logo, adiciona um dia no fim e no divisor de período de 5h
+  // Se o início for maior que o fim significa que o período termina no dia
+  // seguinte, logo, adiciona um dia no fim e no divisor de período de 5h.
   const startIsGreater = startInMillis > endInMillis;
   if (startIsGreater) {
     const ONE_DAY = 1;
@@ -67,10 +67,10 @@ function calculate(startTimeString, endTimeString) {
 
   // Ordena as datas porque dependendo do período informado um divisor de
   // período inserido será inútil e será removido logo mais. Exemplo: de 21:00
-  // até 03:00 o único divisor de perído contido nesse intervalo é o de 22:00.
+  // até 03:00 o único divisor de período contido nesse intervalo é o de 22:00.
   dateArray.sort((date1, date2) => date1.getTime() - date2.getTime());
 
-  // Com o array ordenado conseguimos saber o índice do ínicio e fim do perído.
+  // Com o array ordenado conseguimos saber o índice do ínicio e fim do período.
   const startIndex = dateArray.indexOf(startDateTime);
   const endIndex = dateArray.indexOf(endDateTime);
 
@@ -78,16 +78,16 @@ function calculate(startTimeString, endTimeString) {
   // 03:00 o divisor de 22h será removido.
   dateArray = dateArray.slice(startIndex, endIndex + 1);
 
-  // Isso tudo foi a preparação para dividir o perído em subperíodos e definir
-  // o que é noturno e o que é diurno. Vamos iterar com cada item e combiná-lo
-  // com o próximo e definir se esse subperiodo é noturno ou diurno.
+  // Isso tudo foi a preparação para dividir o período em subperíodos e definir
+  // o que é noturno e o que é diurno. Vamos iterar em cada item e combiná-lo
+  // com o próximo e definir se esse subperíodo é noturno ou diurno.
   const subperiodsArray = [];
   dateArray.forEach((startDate, i) => {
     const nextIndex = i + 1;
     const noNextDate = nextIndex === dateArray.length;
     if (noNextDate) { return; }
 
-    // Para o ínicio do período 22:00 é noturno e 05:00 é diurno.
+    // Para o ínicio do período, 22:00 é noturno e 05:00 é diurno.
     const startHoursConsideredNocturnal = [22, 23, 0, 1, 2, 3, 4];
 
     // Devido à estrutura que criamos até aqui, se a hora de início está dentro
@@ -102,7 +102,7 @@ function calculate(startTimeString, endTimeString) {
   });
 
   // Itera sobre os subperíodos e soma tempo noturno e diurno separadamente e
-  // depois retonar o resultado em minutos
+  // depois retona o resultado em minutos
   let daytimeInMinutes = 0;
   let nocturnalInMinutes = 0;
   subperiodsArray.forEach((subperiod) => {
