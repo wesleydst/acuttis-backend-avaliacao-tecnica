@@ -13,6 +13,17 @@ describe("Time Calculator Endpoint", () => {
       nocturnalInMinutes: 420
     });
   });
+
+  test(`Deve retornar erro ao informar tempos iguais`, async () => {
+    const startEncoded = encodeURI("00:00");
+    const endEncoded = encodeURI("00:00");
+    const res = await request(app)
+      .get(`/time-calculator/calculate/${startEncoded}/${endEncoded}`);
+    expect(res.statusCode).toEqual(500);
+    expect(res.body).toEqual({
+      error: "Tempos iguais não é válido."
+    });
+  });
 });
 
 test(`Retornar 404 para uma rota inexistente`, async () => {
