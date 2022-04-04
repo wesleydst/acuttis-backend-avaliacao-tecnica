@@ -23,3 +23,9 @@ describe("Time Calculator Endpoint", () => {
     });
   });
 });
+
+test(`Retornar 404 para uma rota inexistente`, async () => {
+  const res = await request(app)
+    .get('/rota-inexistente');
+  expect(res.statusCode).toEqual(404);
+});
