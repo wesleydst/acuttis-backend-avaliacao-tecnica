@@ -1,6 +1,9 @@
 const express = require("express");
+const cors = require('cors');
 const timeCalculator = require("./domain/TimeCalculator");
 const app = express();
+
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.json({
