@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll --verbose",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "16.x"
   },
   "author": "Wesley Tavares <w.souzatavares@gmail.com> (https://github.com/wesleydst)",
   "license": "UNLICENSED",
