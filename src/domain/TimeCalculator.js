@@ -77,10 +77,10 @@ function calculate(startTimeString, endTimeString) {
   // 03:00 o divisor de 5h será removido.
   dateArray = dateArray.slice(startIndex, endIndex + 1);
 
-  // Isso tudo foi a preparação para dividir o período em subperíodos e definir
-  // o que é noturno e o que é diurno. Vamos iterar em cada item e combiná-lo
-  // com o próximo e definir se esse subperíodo é noturno ou diurno.
-  const subperiodsArray = [];
+  // Finalizando o processamento, cada item do array combinado com o próximo é um
+  // subperíodo, com isso definimos se é noturno ou diurno e fazemos o somatório.
+  let daytimeInMinutes = 0;
+  let nocturnalInMinutes = 0;
   dateArray.forEach((startDate, i) => {
     const nextIndex = i + 1;
     const noNextDate = nextIndex === dateArray.length;
@@ -93,26 +93,16 @@ function calculate(startTimeString, endTimeString) {
     // suficiente para definir se é um subperíodo noturno ou diurno.
     const isNocturnal = startHoursConsideredNocturnal.includes(startDate.getHours());
 
-    subperiodsArray.push({
-      start: startDate,
-      end: dateArray[nextIndex],
-      isNocturnal: isNocturnal
-    });
-  });
+    const endDate = dateArray[nextIndex];
+    const diff = getDiffInMinutes(startDate, endDate);
 
-  // Itera sobre os subperíodos e soma tempo noturno e diurno separadamente e
-  // depois retona o resultado em minutos
-  let daytimeInMinutes = 0;
-  let nocturnalInMinutes = 0;
-  subperiodsArray.forEach((subperiod) => {
-    const diff = getDiffInMinutes(subperiod.start, subperiod.end);
-
-    if (subperiod.isNocturnal) {
+    // Após definir se é noturno ou diurno e calcular a diferença do início e fim,
+    // faz o somatório no contador apropriado
+    if (isNocturnal) {
       nocturnalInMinutes = nocturnalInMinutes + diff;
-      return;
+    } else {
+      daytimeInMinutes = daytimeInMinutes + diff;
     }
-
-    daytimeInMinutes = daytimeInMinutes + diff;
   });
 
   return {
