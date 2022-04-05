@@ -17,8 +17,8 @@ function getDiffInMinutes(startDateTime, endDateTime) {
  * Recebe um período de trabalho (hora inicial e hora final) e identifica a
  * quantidade de horas que foram trabalhadas em horário diurno e também as que
  * foram trabalhadas em horário noturno. Considera-se horário noturno todo o
- * período trabalhado entre as 22:00 e as 05:00. Por consequência, considera-se
- * horário diurno todo o período trabalhado entre as 05:00 e as 22:00.
+ * período trabalhado entre 22:00 e 05:00. Por consequência, considera-se
+ * horário diurno todo o período trabalhado entre 05:00 e 22:00.
  *
  * @param {string} startTimeString - hora inicial do período de trabalho.
  * @param {string} endTimeString - hora final do período de trabalho.
@@ -33,9 +33,8 @@ function calculate(startTimeString, endTimeString) {
   // A regra de negócio define que a mudança de turno acontece em dois momentos:
   //    às 22:00 e às 05:00
   // As variáveis abaixo irão ajudar a dividir os períodos para calcular as horas
-  // trabalhadas em cada turno, pois pode acontecer de uma parte do período
-  // começar antes do turno da noite, durar a noite toda e terminar no turno do
-  // dia novamente.
+  // trabalhadas em cada turno, pois pode acontecer do horário começar no período
+  // diurno, durar o período noturno inteiro e terminar no período diurno.
   let periodDivider5h = new Date("2022-01-01 05:00");
   let periodDivider22h = new Date("2022-01-01 22:00");
 
@@ -49,8 +48,8 @@ function calculate(startTimeString, endTimeString) {
   let startDateTime = new Date(defaultDateInMillis + startInMillis);
   let endDateTime = new Date(defaultDateInMillis + endInMillis);
 
-  // Se o início for maior que o fim significa que o período termina no dia
-  // seguinte, logo, adiciona um dia no fim e no divisor de período de 5h.
+  // Se o início do período for maior que o fim, significa que o período termina
+  // no dia seguinte, logo, adiciona um dia no fim e no divisor de período de 5h.
   const startIsGreater = startInMillis > endInMillis;
   if (startIsGreater) {
     const ONE_DAY = 1;
@@ -58,11 +57,11 @@ function calculate(startTimeString, endTimeString) {
     periodDivider5h.setDate(periodDivider5h.getDate() + ONE_DAY);
   }
 
-  // O início, o fim e os divisores de períodos são inseridos num array que
-  // vai auxiliar separar o que foi trabalhado no turno da noite e o que foi no
-  // turno do dia. Exemplo: se um período começa 20:00 e termina 06:00, neste
-  // caso inicialmente foi trabalhado 2h no período diurno, depois 7h no noturno
-  // e por fim mais 1h no diurno.
+  // O array abaixo com startDateTime, endDateTime, periodDivider5h e
+  // periodDivider22h vai auxiliar separar o que foi trabalhado no período
+  // diurno e o que foi trabalhado no período noturno. Exemplo:
+  // se um período começa às 20:00 e termina às 06:00, foi trabalhado 2h no
+  // período diurno, depois 7h no noturno e por fim mais 1h no diurno.
   let dateArray = [startDateTime, endDateTime, periodDivider5h, periodDivider22h];
 
   // Ordena as datas porque dependendo do período informado um divisor de
@@ -75,7 +74,7 @@ function calculate(startTimeString, endTimeString) {
   const endIndex = dateArray.indexOf(endDateTime);
 
   // Agora pegamos do array apenas o intervalo útil. No exemplo de 21:00 até
-  // 03:00 o divisor de 22h será removido.
+  // 03:00 o divisor de 5h será removido.
   dateArray = dateArray.slice(startIndex, endIndex + 1);
 
   // Isso tudo foi a preparação para dividir o período em subperíodos e definir
@@ -90,8 +89,8 @@ function calculate(startTimeString, endTimeString) {
     // Para o ínicio do período, 22:00 é noturno e 05:00 é diurno.
     const startHoursConsideredNocturnal = [22, 23, 0, 1, 2, 3, 4];
 
-    // Devido à estrutura que criamos até aqui, se a hora de início está dentro
-    // do período noturno, o fim também está.
+    // Devido à estrutura que criamos até aqui, somente a hora inicial é
+    // suficiente para definir se é um subperíodo noturno ou diurno.
     const isNocturnal = startHoursConsideredNocturnal.includes(startDate.getHours());
 
     subperiodsArray.push({
