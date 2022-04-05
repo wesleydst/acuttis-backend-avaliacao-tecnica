@@ -1,9 +1,13 @@
 const express = require("express");
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const timeCalculator = require("./domain/TimeCalculator");
 const app = express();
+const workTimeRoutes = require("./WorkTimeRoutes");
 
+app.use(bodyParser.json()); // parse application/json
 app.use(cors());
+app.use(workTimeRoutes);
 
 app.get("/time-calculator/calculate/:start/:end", (req, res) => {
   const { start, end } = req.params;
