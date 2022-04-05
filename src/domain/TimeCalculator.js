@@ -30,9 +30,13 @@ function calculate(startTimeString, endTimeString) {
     throw new Error("Tempos iguais não é válido.")
   }
 
+  // Inicialmente é feito um processamento para dividir o período em subperíodos
+  // e definir o que é noturno e o que é diurno. Daí então será possível fazer
+  // o somatório do tempo de cada período.
+
   // A regra de negócio define que a mudança de turno acontece em dois momentos:
   //    às 22:00 e às 05:00
-  // As variáveis abaixo irão ajudar a dividir os períodos para calcular as horas
+  // As 2 variáveis abaixo irão ajudar a dividir os períodos para calcular as horas
   // trabalhadas em cada turno, pois pode acontecer do horário começar no período
   // diurno, durar o período noturno inteiro e terminar no período diurno.
   let periodDivider5h = new Date("2022-01-01 05:00");
@@ -42,6 +46,8 @@ function calculate(startTimeString, endTimeString) {
   // em uma data completa no mesmo dia
   const defaultDateInMillis = new Date("2022-01-01 00:00").getTime();
 
+  // Usa milissegundos para utilizar o construtor de Date
+  // Mas será tudo 0, então, não interfere nos cálculos
   const startInMillis = convertTimeStringToMillis(startTimeString);
   const endInMillis = convertTimeStringToMillis(endTimeString);
 
